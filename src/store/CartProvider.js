@@ -1,5 +1,6 @@
 import { useReducer } from "react";
 import CartContext from "./cart-context";
+import { act } from "react-dom/test-utils";
 
 const defaultCartState = {
   items: [],
@@ -7,17 +8,36 @@ const defaultCartState = {
 };
 
 const cartReducer = (state, action) => {
+  
+  if (action.type === "ADD") {
+    //updatedItems = [...state.items, action.item];
+   const  updatedTotalAmount = state.totalAmount + action.item.amt * action.item.enteredQt;
+
+    const existingCartItemIndex = state.items.findIndex(
+      (item) => item.id === action.item.id
+    );
+
+    const existingCartItem = state.items[existingCartItemIndex];
     let updatedItems;
-    if(action.type === 'ADD'){
-         updatedItems = state.items.concat(action.item);
+
+    if (existingCartItem) {
+      const updatedItem = {
+        ...existingCartItem,
+        qt: existingCartItem.qt - action.item.enteredQt,
+      };
+      updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      updatedItems = state.items.concat(action.item);
     }
-    if(action.type === 'REMOVE'){
-        console.log('in Prooovvv')
-   }
-  return {
-    items: updatedItems,
-    totalAmount: 0
+
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
+    };
   }
+
+ // return defaultCartState;
 };
 
 const CartProvider = (props) => {
@@ -26,22 +46,21 @@ const CartProvider = (props) => {
     defaultCartState
   );
 
-  const addItemToCartHandler = item => {
-    dispatchCartAction({type: 'ADD', item:item})
-  }
-
-  const removeItemFromCartHandler = item => {
-    dispatchCartAction({type: 'REMOVE', item:item})
-  }
+  const addItemToCartHandler = (item) => {
+    dispatchCartAction({ type: "ADD", item: item });
+  };
 
   const cartContext = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
-    addMedicine: addItemToCartHandler,
-    removeItem: removeItemFromCartHandler,
+    onAddMedToCart: addItemToCartHandler,
   };
-
-  return <CartContext.Provider value={cartContext}>{props.children}</CartContext.Provider>;
+   //console.log(cartContext)
+  return (
+    <CartContext.Provider value={cartContext}>
+      {props.children}
+    </CartContext.Provider>
+  );
 };
 
 export default CartProvider;

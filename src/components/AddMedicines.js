@@ -3,7 +3,6 @@ import CartContext from "../store/cart-context";
 
 const AddMedicines = (props) => {
     const cartCtx = useContext(CartContext);
-
     const [medId,setMedId] = useState("");
     const [medName,setMedName] = useState("");
     const [medDesc,setMedDesc] = useState("");
@@ -29,14 +28,7 @@ const AddMedicines = (props) => {
 
     const submitHandler = event => {
         event.preventDefault();
-        cartCtx.addMedicine({
-            id: medId,
-            name: medName,
-            desc: medDesc,
-            amt: medAmt,
-            qt: medQt
-        })
-            //console.log(cartCtx);
+        props.onAddMed(medId,medName,medDesc,medAmt,medQt);
     }
 
   return (
