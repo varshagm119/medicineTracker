@@ -36,7 +36,8 @@ const AddMedicines = (props) => {
           medAmt: medAmt,
           medQt: medQt
         }
-        axios.post('https://crudcrud.com/api/Dashboard/523a2acc7d8947278dfc87d342cc518a/Products',prod)
+       
+        axios.post('https://crudcrud.com/api/5a1c3c3cab49462781d72eb8d2ac8c26/Products',prod)
         .then((res)=>
         console.log(res))
         .catch(err => console.error(err.message))
