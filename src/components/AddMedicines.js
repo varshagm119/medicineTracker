@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import CartContext from "../store/cart-context";
+import axios from "axios";
 
 const AddMedicines = (props) => {
     const cartCtx = useContext(CartContext);
@@ -28,6 +29,17 @@ const AddMedicines = (props) => {
 
     const submitHandler = event => {
         event.preventDefault();
+        const prod = {
+          medId: medId,
+          medName: medName,
+          medDesc: medDesc,
+          medAmt: medAmt,
+          medQt: medQt
+        }
+        axios.post('https://crudcrud.com/api/Dashboard/523a2acc7d8947278dfc87d342cc518a/Products',prod)
+        .then((res)=>
+        console.log(res))
+        .catch(err => console.error(err.message))
         props.onAddMed(medId,medName,medDesc,medAmt,medQt);
     }
 
